@@ -47,6 +47,7 @@ function load_text(){
 
 $( document ).ready(function() {
     img = $('#host_img');
+    img.load(preload());
 
     my_n = d.length;
     my_i = 0; //data index

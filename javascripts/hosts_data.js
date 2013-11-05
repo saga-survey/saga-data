@@ -1,4 +1,4 @@
-{
+var d = {
     'text': ['halo 156', 'halo 175', 'halo 200', 'halo 211', 'halo 213', 'halo 222', 
     'halo 223', 'halo 225', 'halo 248', 'halo 266', 'halo 274', 'halo 277', 'halo 282', 
     'halo 285', 'halo 293', 'halo 299', 'halo 304', 'halo 305', 'halo 306', 'halo 308', 
@@ -223,4 +223,4 @@
  'http://www.slac.stanford.edu/~yymao/Rhapsody/HaloThumbnails_nolabel/halo_653.png',
  'http://www.slac.stanford.edu/~yymao/Rhapsody/HaloThumbnails_nolabel/halo_734.png']
 
-}
+};

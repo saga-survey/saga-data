@@ -1,0 +1,28 @@
+#carousel{
+    width: 100%;
+    margin-bottom: 40px;
+}
+
+#carousel_img, #carousel_ctrl{
+    width: 400px;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+#host_img{
+    width: 100%;
+}
+
+#btn_prev, #btn_next{
+    width: 75px;
+    float: right;
+}
+
+#btn_zoom{
+    width: 120px;
+}
+
+#host_text{
+    padding-left: 15px;
+}
+

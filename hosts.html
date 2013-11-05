@@ -10,6 +10,7 @@
 
     <link rel="stylesheet" type="text/css" href="stylesheets/hosts.css" media="screen"/>
     <script src="javascripts/jquery-1.10.2.min.js"></script>
+    <script src="javascripts/hosts_data.js"></script>
     <script src="javascripts/hosts.js"></script>
 
     <title>SAGA Host Galaxies</title>
@@ -28,12 +29,16 @@
     <div class="container">
       <section id="main_content">
       
-<!-- Host Image Carousel Goes Here! -->
-<img id="host_img"></img>
-<button class="btn" id="btn_zoom">Zoom In</button>
-<span id="host_text">loading...</span>
-<button class="btn" id="btn_prev">Prev</button>
-<button class="btn" id="btn_next">Next</button>
+      <!-- Host Image Carousel Goes Here! -->
+      <div id=carousel>
+        <div id="carousel_img"><img id="host_img" /></div>
+        <div id="carousel_ctrl">
+          <button class="btn" id="btn_zoom">Zoom In</button>
+          <span id="host_text">loading...</span>
+          <button class="btn" id="btn_next">Next</button>
+          <button class="btn" id="btn_prev">Prev</button>
+        </div>
+      </div>
 
 <h3>
 <a name="contact" class="anchor" href="#contact"><span class="octicon octicon-link"></span></a>Contact</h3>

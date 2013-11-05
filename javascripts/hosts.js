@@ -1,50 +1,43 @@
 //global variables
-var hosts, i, n, z;
+var my_i, my_z, n;
+var text_key = 'text';
+var url_key = ['url', 'zoom'];
 
-function preload(arrayOfImages) {
-    $(arrayOfImages).each(function(){
-        $('<img/>')[0].src = this;
-    });
+function preload(url) {
+    $(document.createElement('img')).attr('src', url);
 }
 
-function load_host(fi, fz){
-    if (fz){
-        $('#host_img').src = hosts['url'][fi];
-        preload([hosts['zoom'][fi], hosts['url'][(fi+1)%n], 
-                hosts['url'][(fi-1+n)%n]]);
-    }
-    else{
-        $('#host_img').src = hosts['zoom'][fi];
-        preload([hosts['url'][fi], hosts['zoom'][(fi+1)%n], 
-                hosts['zoom'][(fi-1+n)%n]]);
-    }
-    $('#host_text').html = hosts['text'][fi];
-    i = fi;
-    z = fz;
+function load_host(i, z){
+    my_i = i;
+    my_z = z;
+    $('#host_img').attr('src', d[url_key[z]][i]);
+    $('#host_text').html(d[text_key][i]);
+    preload(d[url_key[1-z]][i]);
+    preload(d[url_key[z]][(i+1)%n]);
+    preload(d[url_key[z]][(i-1+n)%n]);
 }
 
 $( document ).ready(function() {
-    $.getJSON("hosts.json", function(data){hosts = data;});
-    n = hosts['url'].length;
+    n = d[text_key].length;
     load_host(0, 0);
 
-    $("btn_next").click(function() {load_host((i+1)%n, z);});
-    $("btn_prev").click(function() {load_host((i-1+n)%n, z);});
-    $("btn_zoom").click(function() {
-        load_host(i, 1-z);
-        if (z) {$(this).html("Zoom Out");} else {$(this).html("Zoom In");}
+    $("#btn_next").click(function() {load_host((my_i+1)%n, my_z);});
+    $("#btn_prev").click(function() {load_host((my_i-1+n)%n, my_z);});
+    $("#btn_zoom").click(function() {
+        load_host(my_i, 1-my_z);
+        if (my_z) {$(this).html("Zoom Out");} else {$(this).html("Zoom In");}
     });
 
     $(document).keydown(function(event){
         switch(event.which){
             case 74:
-                $("btn_prev").click();
+                $("#btn_prev").click();
                 break;
             case 75:
-                $("btn_next").click();
+                $("#btn_next").click();
                 break;
             case 90:
-                $("btn_zoom").click();
+                $("#btn_zoom").click();
                 break;
         }
     });

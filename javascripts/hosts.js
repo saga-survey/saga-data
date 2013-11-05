@@ -17,7 +17,7 @@ function getImgUrl(i, z){
 
 function preload(step){
     if (step){
-        (new Image()).src = getImgUrl((my_i+to_load_step+my_n)%my_n, my_z);
+        (new Image()).src = getImgUrl((my_i+step+my_n)%my_n, my_z);
         (new Image()).src = getImgUrl(my_i, 1-my_z);
     }
     else{

@@ -1,5 +1,5 @@
 //global variables
-var my_n, my_i, my_z, my_k, img, ready;
+var my_n, my_i, my_z, img, preload_step;
 
 var scales = ["sdss_images/hosts_wide/", "sdss_images/hosts_zoom/"];
 
@@ -15,21 +15,20 @@ function getImgUrl(i, z){
     return scales[z] + d[i].id + '.jpg';
 }
 
-function preload(){
-    step = img.data('preload');
+function preload(step){
     if (step){
-        $.get(getImgUrl((my_i+step+my_n)%my_n, my_z));
-        $.get(getImgUrl(my_i, 1-my_z));
+        (new Image()).src = getImgUrl((my_i+to_load_step+my_n)%my_n, my_z);
+        (new Image()).src = getImgUrl(my_i, 1-my_z);
     }
     else{
-        $.get(getImgUrl((my_i+1)%my_n, my_z));
-        $.get(getImgUrl((my_i-1+my_n)%my_n, my_z));
+        (new Image()).src = getImgUrl((my_i+1)%my_n, my_z);
+        (new Image()).src = getImgUrl((my_i-1+my_n)%my_n, my_z);
     }
 }
 
 function change_img(step){
     if (step){ my_i = (my_i + step + my_n)%my_n; } else{ my_z = 1 - my_z;}
-    img.data('preload', step);
+    preload_step = step;
     img.attr('src', getImgUrl(my_i, my_z));
     if (step){ load_text(); }
 }
@@ -46,18 +45,20 @@ function load_text(){
 }
 
 $( document ).ready(function() {
+    //initialize global variables
     img = $('#host_img');
-    img.load(preload());
-
     my_n = d.length;
     my_i = 0; //data index
     my_z = 0; //scale index
+    preload_step = 0;
 
-    img.data('preload', 0);
     img.attr('src', getImgUrl(0, 0));
     load_text();
-    $.get(getImgUrl(0, 1));
+    preload(0);
+    preload(1);
 
+    //binding events
+    img.load(function(){preload(preload_step);});
     $('#btn_next').click(function() {change_img(1);});
     $('#btn_prev').click(function() {change_img(-1);});
     $('#btn_zoom').click(function() {

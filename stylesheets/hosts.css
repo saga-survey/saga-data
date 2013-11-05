@@ -4,12 +4,17 @@
 }
 
 #carousel_img, #carousel_ctrl{
-    width: 400px;
+    width: 512px;
     margin-left: auto;
     margin-right: auto;
 }
 
-#host_img{
+#carousel_img{
+    overflow: hidden;
+    height: 512px;
+}
+
+#carousel_ctrl p, #carousel_ctrl div, #carousel_img img{
     width: 100%;
 }
 
@@ -23,6 +28,5 @@
 }
 
 #host_text{
-    padding-left: 15px;
+    text-align: center;
 }
-

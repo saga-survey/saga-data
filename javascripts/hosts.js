@@ -30,23 +30,27 @@ function change_hash(){
     var h = (my_i+1).toString();
     if (my_z) { h += 'z';}
     window.location.hash = '#!' + h;
-    /*
+}
+
+function change_disqus(){
     DISQUS.reset({
       reload: true,
       config: function () {
-        this.page.identifier = h;
-        this.page.url = 'http://saga-survey.github.io/saga-data/hosts.html#!'+h;
+        this.page.identifier = (my_i+1).toString();
+        this.page.url = 'http://drphilmarshall.github.io/saga-data/hosts.html' + window.location.hash;
       }
     });
-    */
 }
 
 function change_img(step){
     if (step){ my_i = (my_i + step + my_n)%my_n; } else{ my_z = 1 - my_z;}
     preload_step = step;
     img.attr('src', getImgUrl(my_i, my_z));
-    if (step){ load_text(); }
     change_hash();
+    if (step){ 
+        change_disqus();
+        load_text(); 
+    }
 }
 
 function load_text(){
@@ -70,16 +74,10 @@ $( document ).ready(function() {
     if (hash.charAt(0) == '!'){ hash = hash.substring(1);}
     my_i = parseInt(hash) - 1;
     my_z = 0;
-    preload_step = 0;
-
     if (isNaN(my_i) || my_i < 0 || my_i >= my_n) { my_i = 0;}
     else if (hash.charAt(hash.length-1) == 'z') {my_z = 1;}
-
-    img.attr('src', getImgUrl(my_i, my_z));
-    load_text();
-    change_hash();
-    preload(0);
-    preload(1);
+    my_i -= 1;
+    change_img(1);
 
     //binding events
     img.load(function(){preload(preload_step);});

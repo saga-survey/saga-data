@@ -48,8 +48,8 @@ var change_img = function(step){
     img.attr('src', getImgUrl(my_i, my_z));
     window.location.hash = get_full_hash();
     if (step){
-        change_disqus();
         load_text(); 
+        change_disqus();
     }
 };
 
@@ -80,7 +80,7 @@ $( document ).ready(function() {
     //initialize global variables
     img = $('#host_img');
     my_n = d.length;
-    page_title = 
+
     //resolve hash
     var hash = window.location.hash.substring(1);
     if (hash.charAt(0) == '!'){ hash = hash.substring(1);}
@@ -94,7 +94,8 @@ $( document ).ready(function() {
     disqus_identifier = get_hash_id();
     disqus_url = page_url + '#!' + disqus_identifier;
     disqus_title = page_title + disqus_identifier;
-    var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+    var dsq = document.createElement('script'); 
+    dsq.type = 'text/javascript'; dsq.async = true;
     dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
     (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
 

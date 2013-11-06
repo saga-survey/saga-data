@@ -4,7 +4,7 @@ var my_n, my_i, my_z, img, preload_step;
 var scales = ["sdss_images/hosts_wide/", "sdss_images/hosts_zoom/"];
 
 var url_nsa = "http://www.nsatlas.org/getAtlas.html?submit_form=Submit&search=nsaid&nsaID=";
-var url_sdss = "http://skyserver.sdss3.org/dr10/en/tools/explore/obj.aspx?id=";
+var url_sdss = "http://skyserver.sdss3.org/dr8/en/tools/explore/obj.asp?id=";
 var url_ned = "http://ned.ipac.caltech.edu/cgi-bin/objsearch?objname=";
 
 function getHyperlink(href, text){

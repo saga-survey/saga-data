@@ -46,7 +46,7 @@ function load_text(){
     t += getHyperlink(url_nsa + d_this.nsa, 'NSA '+d_this.nsa);
     t += ', ' + getHyperlink(url_sdss + d_this.sdss_ObjID, 'SDSS '+d_this.sdss);
     if('ngc' in d_this) {
-        t += ', ' + getHyperlink(url_ned + d_this.ngc, 'NGC '+d_this.ngc);
+        t += ', ' + getHyperlink(url_ned+'NGC'+d_this.ngc, 'NGC '+d_this.ngc);
     }
     t += ')';
     $('#host_text').html(t);

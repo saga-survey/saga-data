@@ -3,19 +3,14 @@
     margin-bottom: 40px;
 }
 
-#carousel_img, #carousel_ctrl{
+#carousel img, #carousel div{
     width: 512px;
     margin-left: auto;
     margin-right: auto;
 }
 
-#carousel_img{
-    overflow: hidden;
-    height: 512px;
-}
-
-#carousel_ctrl p, #carousel_ctrl div, #carousel_img img{
-    width: 100%;
+#carousel p{
+    text-align: center;
 }
 
 #btn_prev, #btn_next{
@@ -25,8 +20,4 @@
 
 #btn_zoom{
     width: 120px;
-}
-
-#host_text{
-    text-align: center;
 }

@@ -9,7 +9,8 @@
     <link rel="stylesheet" type="text/css" href="stylesheets/print.css" media="print" />
 
     <link rel="stylesheet" type="text/css" href="stylesheets/hosts.css" media="screen"/>
-    <script src="javascripts/jquery-1.10.2.min.js"></script>
+
+    <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>
     <script src="javascripts/hosts_data.js"></script>
     <script src="javascripts/hosts.js"></script>
 
@@ -31,16 +32,12 @@
       
       <!-- Host Image Carousel Goes Here! -->
       <div id=carousel>
-        <div id="carousel_img">
-          <img id="host_img" />
-        </div>
-        <div id="carousel_ctrl">
-          <p id="host_text"></p>
-          <div>
-            <button class="btn" id="btn_zoom">Zoom In</button>
-            <button class="btn" id="btn_next">Next</button>
-            <button class="btn" id="btn_prev">Prev</button>
-          </div>
+        <div><img id="host_img" /></div>
+        <p id="host_text"></p>
+        <div>
+          <button class="btn" id="btn_zoom">Zoom In</button>
+          <button class="btn" id="btn_next">Next</button>
+          <button class="btn" id="btn_prev">Prev</button>
         </div>
       </div>
 

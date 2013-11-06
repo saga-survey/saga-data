@@ -26,17 +26,25 @@ function preload(step){
     }
 }
 
+function change_hash(){
+    var h = '#' + (my_i+1).toString();
+    if (my_z) { h += 'z';}
+    window.location.hash = h;
+}
+
 function change_img(step){
     if (step){ my_i = (my_i + step + my_n)%my_n; } else{ my_z = 1 - my_z;}
     preload_step = step;
     img.attr('src', getImgUrl(my_i, my_z));
     if (step){ load_text(); }
+    change_hash();
 }
 
 function load_text(){
     var d_this = d[my_i];
-    var t = getHyperlink(url_nsa + d_this.nsa, d_this.id);
-    t += ' (' + getHyperlink(url_sdss + d_this.sdss, d_this.iau);
+    var t = d_this.id + ' (';
+    t += getHyperlink(url_nsa + d_this.nsa, 'NSA ' + d_this.nsa);
+    t += ', ' + getHyperlink(url_sdss + d_this.sdss, d_this.iau);
     if('ngc' in d_this) {
         t += ', ' + getHyperlink(url_ned + d_this.ngc, d_this.ngc);
     }
@@ -48,12 +56,18 @@ $( document ).ready(function() {
     //initialize global variables
     img = $('#host_img');
     my_n = d.length;
-    my_i = 0; //data index
-    my_z = 0; //scale index
+    
+    var hash = window.location.hash.substring(1);
+    my_i = parseInt(hash) - 1;
+    my_z = 0;
     preload_step = 0;
 
-    img.attr('src', getImgUrl(0, 0));
+    if (isNaN(my_i) || my_i < 0 || my_i >= my_n) { my_i = 0;}
+    else if (hash.charAt(hash.length-1) == 'z') {my_z = 1;}
+
+    img.attr('src', getImgUrl(my_i, my_z));
     load_text();
+    change_hash();
     preload(0);
     preload(1);
 

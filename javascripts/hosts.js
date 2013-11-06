@@ -6,19 +6,20 @@ var url_nsa = "http://www.nsatlas.org/getAtlas.html?submit_form=Submit&search=ns
 var url_sdss = "http://skyserver.sdss3.org/dr8/en/tools/explore/obj.asp?id=";
 var url_ned = "http://ned.ipac.caltech.edu/cgi-bin/objsearch?objname=NGC";
 
+var page_url = "http://drphilmarshall.github.io/saga-data/hosts.html";
 var disqus_shortname = 'saga-hosts';
 var disqus_identifier = '';
-//var disqus_url = '';
+var disqus_url = '';
 
-function getHyperlink(href, text){
+var getHyperlink = function(href, text){
     return '<a target="_blank" href="' + href + '">' + text + '</a>';
-}
+};
 
-function getImgUrl(i, z){
+var getImgUrl = function(i, z){
     return scales[z] + d[i].id + '.jpg';
-}
+};
 
-function preload(step){
+var preload = function(step){
     if (step){
         (new Image()).src = getImgUrl((my_i+step+my_n)%my_n, my_z);
         (new Image()).src = getImgUrl(my_i, 1-my_z);
@@ -27,34 +28,36 @@ function preload(step){
         (new Image()).src = getImgUrl((my_i+1)%my_n, my_z);
         (new Image()).src = getImgUrl((my_i-1+my_n)%my_n, my_z);
     }
-}
+};
 
-function change_hash(){
+var change_hash = function(){
     var h = (my_i+1).toString();
     if (my_z) { h += 'z';}
     window.location.hash = '#!' + h;
-}
+};
 
-function change_disqus(){
-    disqus_identifier = (my_i+1).toString();
-    //disqus_url = 'http://drphilmarshall.github.io/saga-data/hosts.html';
-    var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
-    dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
-    (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
-}
+var change_disqus = function(){
+    DISQUS.reset({
+        reload: true,
+        config: function () {
+            this.page.identifier = (my_i+1).toString();  
+            this.page.url = page_url + window.location.hash;
+        }
+    });
+};
 
-function change_img(step){
+var change_img = function(step){
     if (step){ my_i = (my_i + step + my_n)%my_n; } else{ my_z = 1 - my_z;}
     preload_step = step;
     img.attr('src', getImgUrl(my_i, my_z));
     change_hash();
-    if (step){ 
+    if (step){
         change_disqus();
         load_text(); 
     }
-}
+};
 
-function load_text(){
+var load_text = function(){
     var d_this = d[my_i];
     var t = d_this.id + ' (';
     t += getHyperlink(url_nsa + d_this.nsa, 'NSA '+d_this.nsa);
@@ -64,25 +67,40 @@ function load_text(){
     }
     t += ')';
     $('#host_text').html(t);
-}
+};
 
 $( document ).ready(function() {
     //initialize global variables
     img = $('#host_img');
     my_n = d.length;
     
+    //resolve hash
     var hash = window.location.hash.substring(1);
     if (hash.charAt(0) == '!'){ hash = hash.substring(1);}
     my_i = parseInt(hash) - 1;
     my_z = 0;
     if (isNaN(my_i) || my_i < 0 || my_i >= my_n) { my_i = 0;}
     else if (hash.charAt(hash.length-1) == 'z') {my_z = 1;}
-    my_i -= 1;
-    change_img(1);
-    (new Image()).src = getImgUrl((my_i-1+my_n)%my_n, my_z);
+    change_hash();
+    
+    //load disqus
+    disqus_identifier = (my_i+1).toString();
+    disqus_url = page_url + window.location.hash;
+    var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+    dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+    (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
 
-    //binding events
+    //load the first image
+    img.attr('src', getImgUrl(my_i, my_z));
+    load_text();
+    (new Image()).src = getImgUrl((my_i+1)%my_n, my_z);
+    (new Image()).src = getImgUrl((my_i-1+my_n)%my_n, my_z);
+    (new Image()).src = getImgUrl(my_i+1, 1-my_z);
+
+    //bind preload to img.load
     img.load(function(){preload(preload_step);});
+
+    //bind click events
     $('#btn_next').click(function() {change_img(1);});
     $('#btn_prev').click(function() {change_img(-1);});
     $('#btn_zoom').click(function() {
@@ -90,6 +108,7 @@ $( document ).ready(function() {
         if (my_z) {$(this).html('Zoom Out');} else {$(this).html('Zoom In');}
     });
 
+    //bind key events
     $(document).keydown(function(event){
         switch(event.which){
             case 37:

@@ -6,7 +6,7 @@ var url_nsa = "http://www.nsatlas.org/getAtlas.html?submit_form=Submit&search=ns
 var url_sdss = "http://skyserver.sdss3.org/dr8/en/tools/explore/obj.asp?id=";
 var url_ned = "http://ned.ipac.caltech.edu/cgi-bin/objsearch?objname=NGC";
 
-var page_url = "http://saga-survey.github.io/saga-data/hosts.html";
+var page_url = "http://saga-survey.github.io/saga-data/hosts.html#!";
 var page_title = "SAGA Host Galaxies #";
 var disqus_shortname = 'saga-hosts';
 var disqus_identifier = '';
@@ -25,18 +25,13 @@ var get_hash_id = function(){
     return (my_i+1).toString();
 };
 
-var get_full_hash = function(){
-    if (my_z) {return '#!' + get_hash_id() + 'z';}
-    else {return '#!' + get_hash_id();}
-};
-
 var change_disqus = function(){
     var hid = get_hash_id();
     DISQUS.reset({
         reload: true,
         config: function () {
-            this.page.identifier = hid;  
-            this.page.url = page_url + '#!' + hid;
+            this.page.identifier = d[my_i].id;  
+            this.page.url = page_url + hid;
             this.page.title = page_title + hid;
         }
     });
@@ -46,7 +41,9 @@ var change_img = function(step){
     if (step){ my_i = (my_i + step + my_n)%my_n; } else{ my_z = 1 - my_z;}
     preload_step = step;
     img.attr('src', getImgUrl(my_i, my_z));
-    window.location.hash = get_full_hash();
+    var h = '#!' + get_hash_id();
+    if (my_z) {h += 'z';}
+    window.location.hash = h;
     if (step){
         load_text(); 
         change_disqus();
@@ -88,12 +85,12 @@ $( document ).ready(function() {
     my_z = 0;
     if (isNaN(my_i) || my_i < 0 || my_i >= my_n) { my_i = 0;}
     else if (hash.charAt(hash.length-1) == 'z') {my_z = 1;}
-    window.location.hash = get_full_hash();
     
     //load disqus
-    disqus_identifier = get_hash_id();
-    disqus_url = page_url + '#!' + disqus_identifier;
-    disqus_title = page_title + disqus_identifier;
+    var hid = get_hash_id();
+    disqus_identifier = d[my_i].id;
+    disqus_url = page_url + hid;
+    disqus_title = page_title + hid;
     var dsq = document.createElement('script'); 
     dsq.type = 'text/javascript'; dsq.async = true;
     dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';

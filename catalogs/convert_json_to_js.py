@@ -2,7 +2,7 @@ import json
 
 t = 'host'
 name = 'hosts_data'
-needed = ['id', 'nsa', 'iau', 'sdss', 'ngc']
+needed = ['id', 'nsa', 'sdss', 'sdss_ObjID', 'ngc']
 
 with open('data.json', 'r') as f:
     X = json.load(f)

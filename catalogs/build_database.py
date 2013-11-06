@@ -3,9 +3,9 @@ import json
 from urllib import urlopen
 
 re_radec = re.compile('http://skyserver\.sdss3\.org/dr8/en/tools/explore/obj\.asp\?ra=(\d+\.\d+)&amp;dec=(-?\d+\.\d+)')
-re_load = re.compile('loadSummary\(\'([0-9a-z]+)&amp;spec=([0-9a-z]+)\'\)')
-re_sdss = re.compile('<span class=\'large\'>(\d+)</span>')
-re_iau = re.compile('(J\d+\.\d+[+-]\d+\.\d+)')
+re_sdss_load = re.compile('loadSummary\(\'([0-9a-z]+)&amp;spec=([0-9a-z]+)\'\)')
+re_sdss_ObjID = re.compile('<span class=\'large\'>(\d+)</span>')
+re_sdss = re.compile('SDSS\s*(J\d+\.\d+[+-]\d+\.\d+)')
 re_ngc = re.compile('NGC\s*(\d+)')
 
 url_nsa = 'http://www.nsatlas.org/getAtlas.html?search=nsaid&nsaID=%s&submit_form=Submit'
@@ -18,29 +18,32 @@ def loadurl(url):
     f.close()
     return X
 
-def get_data(nsa_id):
-    d = {'nsa': str(nsa_id)}
-    m = re_radec.search(loadurl(url_nsa%d['nsa']))
+def add_value(d, key, m):
+    if m is not None:
+        d[key] = m.groups()[0]
+    return d
+
+def get_data(d):
+    text = loadurl(url_nsa%d['nsa'])
+    m = re_radec.search(text)
     if m is None: return d
     d['ra'], d['dec'] = m.groups()
-    m = re_load.search(loadurl(url_sdss_l%m.groups()))
+    d = add_value(d, 'ngc', re_ngc.search(text))
+
+    m = re_sdss_load.search(loadurl(url_sdss_l%(d['ra'], d['dec'])))
     if m is None: return d
-    summary = loadurl(url_sdss_r%m.groups())
-    m = re_sdss.search(summary)
-    if m is not None: d['sdss'] = m.groups()[0]
-    m = re_iau.search(summary)
-    if m is not None: d['iau'] = 'SDSS '+m.groups()[0]
-    m = re_ngc.search(summary)
-    if m is not None: d['ngc'] = 'NGC '+m.groups()[0]
+    text = loadurl(url_sdss_r%m.groups())
+    d = add_value(d, 'ngc', re_ngc.search(text))
+    d = add_value(d, 'sdss', re_sdss.search(text))
+    d = add_value(d, 'sdss_ObjID', re_sdss_ObjID.search(text))
     return d
 
 with open('saga_hosts_nsa_ids.txt', 'r') as f:
     for i, l in enumerate(f):
         print ',' if i else '['
         items = l.split()
-        d = get_data(items[1])
-        d['id'] = items[0]
-        d['type'] = 'host'
+        d = {'id': items[0], 'nsa': items[1], 'type': 'host'}
+        d = get_data(d)
         print json.dumps(d),
 print
 print ']'

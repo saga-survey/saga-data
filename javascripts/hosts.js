@@ -1,11 +1,14 @@
 //global variables
 var my_n, my_i, my_z, img, preload_step;
-
 var scales = ["sdss_images/hosts_wide/", "sdss_images/hosts_zoom/"];
 
 var url_nsa = "http://www.nsatlas.org/getAtlas.html?submit_form=Submit&search=nsaid&nsaID=";
 var url_sdss = "http://skyserver.sdss3.org/dr8/en/tools/explore/obj.asp?id=";
 var url_ned = "http://ned.ipac.caltech.edu/cgi-bin/objsearch?objname=NGC";
+
+var disqus_shortname = 'saga-hosts';
+var disqus_identifier = '';
+//var disqus_url = '';
 
 function getHyperlink(href, text){
     return '<a target="_blank" href="' + href + '">' + text + '</a>';
@@ -33,13 +36,11 @@ function change_hash(){
 }
 
 function change_disqus(){
-    DISQUS.reset({
-      reload: true,
-      config: function () {
-        this.page.identifier = (my_i+1).toString();
-        this.page.url = 'http://drphilmarshall.github.io/saga-data/hosts.html' + window.location.hash;
-      }
-    });
+    disqus_identifier = (my_i+1).toString();
+    //disqus_url = 'http://drphilmarshall.github.io/saga-data/hosts.html';
+    var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+    dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+    (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
 }
 
 function change_img(step){
@@ -78,6 +79,7 @@ $( document ).ready(function() {
     else if (hash.charAt(hash.length-1) == 'z') {my_z = 1;}
     my_i -= 1;
     change_img(1);
+    (new Image()).src = getImgUrl((my_i-1+my_n)%my_n, my_z);
 
     //binding events
     img.load(function(){preload(preload_step);});

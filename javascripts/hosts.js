@@ -6,7 +6,7 @@ var url_nsa = "http://www.nsatlas.org/getAtlas.html?submit_form=Submit&search=ns
 var url_sdss = "http://skyserver.sdss3.org/dr8/en/tools/explore/obj.asp?id=";
 var url_ned = "http://ned.ipac.caltech.edu/cgi-bin/objsearch?objname=NGC";
 
-var page_url = "http://drphilmarshall.github.io/saga-data/hosts.html";
+var page_url = "http://saga-survey.github.io/saga-data/hosts.html";
 var page_title = "SAGA Host Galaxies #";
 var disqus_shortname = 'saga-hosts';
 var disqus_identifier = '';

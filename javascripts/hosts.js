@@ -30,6 +30,7 @@ function change_hash(){
     var h = (my_i+1).toString();
     if (my_z) { h += 'z';}
     window.location.hash = '#!' + h;
+    /*
     DISQUS.reset({
       reload: true,
       config: function () {
@@ -37,6 +38,7 @@ function change_hash(){
         this.page.url = 'http://saga-survey.github.io/saga-data/hosts.html#!'+h;
       }
     });
+    */
 }
 
 function change_img(step){

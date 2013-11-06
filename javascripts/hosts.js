@@ -7,9 +7,11 @@ var url_sdss = "http://skyserver.sdss3.org/dr8/en/tools/explore/obj.asp?id=";
 var url_ned = "http://ned.ipac.caltech.edu/cgi-bin/objsearch?objname=NGC";
 
 var page_url = "http://drphilmarshall.github.io/saga-data/hosts.html";
+var page_title = "SAGA Host Galaxies #";
 var disqus_shortname = 'saga-hosts';
 var disqus_identifier = '';
 var disqus_url = '';
+var disqus_title = '';
 
 var getHyperlink = function(href, text){
     return '<a target="_blank" href="' + href + '">' + text + '</a>';
@@ -17,6 +19,38 @@ var getHyperlink = function(href, text){
 
 var getImgUrl = function(i, z){
     return scales[z] + d[i].id + '.jpg';
+};
+
+var get_hash_id = function(){
+    return (my_i+1).toString();
+};
+
+var get_full_hash = function(){
+    if (my_z) {return '#!' + get_hash_id() + 'z';}
+    else {return '#!' + get_hash_id();}
+};
+
+var change_disqus = function(){
+    var hid = get_hash_id();
+    DISQUS.reset({
+        reload: true,
+        config: function () {
+            this.page.identifier = hid;  
+            this.page.url = page_url + '#!' + hid;
+            this.page.title = page_title + hid;
+        }
+    });
+};
+
+var change_img = function(step){
+    if (step){ my_i = (my_i + step + my_n)%my_n; } else{ my_z = 1 - my_z;}
+    preload_step = step;
+    img.attr('src', getImgUrl(my_i, my_z));
+    window.location.hash = get_full_hash();
+    if (step){
+        change_disqus();
+        load_text(); 
+    }
 };
 
 var preload = function(step){
@@ -27,33 +61,6 @@ var preload = function(step){
     else{
         (new Image()).src = getImgUrl((my_i+1)%my_n, my_z);
         (new Image()).src = getImgUrl((my_i-1+my_n)%my_n, my_z);
-    }
-};
-
-var change_hash = function(){
-    var h = (my_i+1).toString();
-    if (my_z) { h += 'z';}
-    window.location.hash = '#!' + h;
-};
-
-var change_disqus = function(){
-    DISQUS.reset({
-        reload: true,
-        config: function () {
-            this.page.identifier = (my_i+1).toString();  
-            this.page.url = page_url + window.location.hash;
-        }
-    });
-};
-
-var change_img = function(step){
-    if (step){ my_i = (my_i + step + my_n)%my_n; } else{ my_z = 1 - my_z;}
-    preload_step = step;
-    img.attr('src', getImgUrl(my_i, my_z));
-    change_hash();
-    if (step){
-        change_disqus();
-        load_text(); 
     }
 };
 
@@ -73,7 +80,7 @@ $( document ).ready(function() {
     //initialize global variables
     img = $('#host_img');
     my_n = d.length;
-    
+    page_title = 
     //resolve hash
     var hash = window.location.hash.substring(1);
     if (hash.charAt(0) == '!'){ hash = hash.substring(1);}
@@ -81,11 +88,12 @@ $( document ).ready(function() {
     my_z = 0;
     if (isNaN(my_i) || my_i < 0 || my_i >= my_n) { my_i = 0;}
     else if (hash.charAt(hash.length-1) == 'z') {my_z = 1;}
-    change_hash();
+    window.location.hash = get_full_hash();
     
     //load disqus
-    disqus_identifier = (my_i+1).toString();
-    disqus_url = page_url + window.location.hash;
+    disqus_identifier = get_hash_id();
+    disqus_url = page_url + '#!' + disqus_identifier;
+    disqus_title = page_title + disqus_identifier;
     var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
     dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
     (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);

@@ -5,7 +5,7 @@ var scales = ["sdss_images/hosts_wide/", "sdss_images/hosts_zoom/"];
 
 var url_nsa = "http://www.nsatlas.org/getAtlas.html?submit_form=Submit&search=nsaid&nsaID=";
 var url_sdss = "http://skyserver.sdss3.org/dr8/en/tools/explore/obj.asp?id=";
-var url_ned = "http://ned.ipac.caltech.edu/cgi-bin/objsearch?objname=";
+var url_ned = "http://ned.ipac.caltech.edu/cgi-bin/objsearch?objname=NGC";
 
 function getHyperlink(href, text){
     return '<a target="_blank" href="' + href + '">' + text + '</a>';
@@ -27,9 +27,16 @@ function preload(step){
 }
 
 function change_hash(){
-    var h = '#' + (my_i+1).toString();
+    var h = (my_i+1).toString();
     if (my_z) { h += 'z';}
-    window.location.hash = h;
+    window.location.hash = '#!' + h;
+    DISQUS.reset({
+      reload: true,
+      config: function () {
+        this.page.identifier = h;
+        this.page.url = 'http://saga-survey.github.io/saga-data/hosts.html#!'+h;
+      }
+    });
 }
 
 function change_img(step){
@@ -46,7 +53,7 @@ function load_text(){
     t += getHyperlink(url_nsa + d_this.nsa, 'NSA '+d_this.nsa);
     t += ', ' + getHyperlink(url_sdss + d_this.sdss_ObjID, 'SDSS '+d_this.sdss);
     if('ngc' in d_this) {
-        t += ', ' + getHyperlink(url_ned+'NGC'+d_this.ngc, 'NGC '+d_this.ngc);
+        t += ', ' + getHyperlink(url_ned + d_this.ngc, 'NGC '+d_this.ngc);
     }
     t += ')';
     $('#host_text').html(t);
@@ -58,6 +65,7 @@ $( document ).ready(function() {
     my_n = d.length;
     
     var hash = window.location.hash.substring(1);
+    if (hash.charAt(0) == '!'){ hash = hash.substring(1);}
     my_i = parseInt(hash) - 1;
     my_z = 0;
     preload_step = 0;

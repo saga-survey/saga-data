@@ -2,7 +2,7 @@
 
 Visualising and archiving data related to the SAGA survey. 
 
-[Web pages here.](http://drphilmarshall.github.io/saga-data/)
+[Web pages here.](http://saga-survey.github.io/saga-data/)
 
 ### People working on this:
 

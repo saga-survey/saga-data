@@ -1,0 +1,47 @@
+This file is a description of the process used to generate the SAGA master list.
+For the actual code used for this process, check out the `masterlist`
+subdirectory of the `saga-code` repository.
+
+The file is generated from merging a series of catalogs and then trimming the
+final merged catalog based on observed redshift.  The input catalogs are:
+
+* The EDD (http://edd.ifa.hawaii.edu/ - that web site also used as the actual data source for the next 3)
+* LEDA (http://leda.univ-lyon1.fr/)
+* The 2MRS (https://www.cfa.harvard.edu/~dfabricant/huchra/2mass/)
+* Updated Nearby Galaxy Catalog (http://adsabs.harvard.edu/abs/2013AJ....145..101K)
+* NASA-Sloan Atlas (http://www.nsatlas.org/)
+* 6dFGS (http://www.aao.gov.au/6dFGS/)
+* 2MASS Extended Source Catalog (http://www.ipac.caltech.edu/2mass/releases/allsky/)
+
+The base catalog is generated from LEDA, which is very large and has all of the
+galaxies in the first four catalogs, but in many cases as incomplete entries
+lacking crucial quantities like redshifts. So LEDA is used as the initial list
+of galaxies, but the 2MRS, EDD, and Nearby Galaxy Catalog are applied (in that
+order) to update any quantities that are missing or less accurate in an earlier
+stage.
+
+After the first 4 are merged, the NSA velocities and photometry is added in,
+overwriting velocities and distances. (Except for the nearby galaxy catalog,
+which are all near enough that the hubble flow is not dominant.)  Unlike the
+first 4 catalogs, some galaxies in the NSA are *not* present in LEDA. So these
+galaxies are added to the master list.
+
+Finally, the 6dF Galaxy Survey is matched - it overlaps quite a bit with LEDA
+and the 2MRS, but because it is in the South (where LEDA is less complete), it
+also  includes galaxies that are not in LEDA.  So these are added in as well.
+
+The final step of merging data involves cross-matching this catalog with the
+2MASS extended source catalog.  That adds photometric data for some of the
+objects that otherwise only have reshifts by no photometry (again, particularly
+in the South).
+
+With this merged catalog in-hand, a lot of the extraneous data is expunged.  At
+the time of this writing, that reduces the data to just identifiers,
+positions/redshfits, and total magnitudes.  But that may be changed in the
+future once we decide if we want to add more columns.
+
+The last step is to remove everything from the catalog that has v_helio > 4000
+km/s.  Note that in general, to trust that this catalog is complete, you should
+further sub-select to only include objects with v_helio < 3000 km/s, as the
+3000-4000 range is probably at least in part incomplete.  But we are keeping it
+in the masterlist so that anyone who wants to can test if edge-effects matter.
